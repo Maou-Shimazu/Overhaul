@@ -1,6 +1,23 @@
 #include <iostream>
+#include <toml++/toml.h>
+
+#ifndef INCLUDE_TOMLPLUSPLUS_H
 #include "../include/toml++/toml.h"
+#endif
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
+   toml::table tbl;
+   try
+   {
+       tbl = toml::parse_file("include/url.toml");
+           std::cout << tbl << "\n";
+   }
+   catch (const toml::parse_error& err)
+   {
+       std::cerr << "Parsing failed:\n" << err << "\n";
+       return 1;
+   }
 
+   return 0;
 }
