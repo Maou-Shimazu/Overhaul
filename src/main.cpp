@@ -7,11 +7,12 @@
 
 int main(int argc, char** argv)
 {
-   toml::table tbl;
    try
    {
-       tbl = toml::parse_file("include/url.toml");
-           std::cout << tbl << "\n";
+       toml::table tbl = toml::parse_file("config/url.toml");
+       //std::cout << tbl << "\n";
+       std::optional<std::string> parse_args = tbl["parse_args"].value<std::string>();
+       std::cout << *parse_args << std::endl;
    }
    catch (const toml::parse_error& err)
    {
