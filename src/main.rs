@@ -2,17 +2,13 @@ use configparser::ini::Ini;
 use std::error::Error;
 use std::io::Write;
 use std::fs::OpenOptions;
-use std::io::stdin;
 use text_io::read;
 
-
 pub mod dec;
-
 
 #[allow(dead_code)]
 /// Requests content from a URL.
 fn get_request(){}
-
 
 
 fn update_configuration_raw(file: &str, data: &str){
@@ -23,6 +19,7 @@ fn update_configuration_raw(file: &str, data: &str){
    write.write_all(data.as_bytes()).expect("Unable to write data");
 }
 
+#[allow(dead_code)]
 fn update_configuration_string(file: &str, data: String){
   let mut write = OpenOptions::new()
         .append(true)
@@ -53,9 +50,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
   get_all_sections(overhaul);
   update_configuration_raw(file, "");
+
+  dec::main_menu();
   
   let newstr: String = read!();
-
   let url = config.get(newstr.as_str().trim(), "url").unwrap();
   let loc = config.get("parse_args", "loc").unwrap();
 
