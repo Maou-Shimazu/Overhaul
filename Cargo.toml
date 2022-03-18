@@ -9,3 +9,8 @@ edition = "2021"
 configparser = "3.0.0"
 reqwest = "0.11.10"
 text_io = "0.1.10"
+colored = "2"
+
+# `cargo test --features dumb_terminal`
+[features]
+dumb_terminal = ["colored/no-color"]

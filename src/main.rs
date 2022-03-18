@@ -11,24 +11,6 @@ pub mod dec;
 fn get_request(){}
 
 
-fn update_configuration_raw(file: &str, data: &str){
-  let mut write = OpenOptions::new()
-        .append(true)
-        .open(file)
-        .expect("Unable to open file");
-   write.write_all(data.as_bytes()).expect("Unable to write data");
-}
-
-#[allow(dead_code)]
-fn update_configuration_string(file: &str, data: String){
-  let mut write = OpenOptions::new()
-        .append(true)
-        .open(file)
-        .expect("Unable to open file");
-   write.write_all(data.as_bytes()).expect("Unable to write data");
-}
-
-
 fn get_all_sections(file: std::collections::HashMap<std::string::String, std::collections::HashMap<std::string::String, std::option::Option<std::string::String>>>){
   println!("\n{:?}\n", file);
 }
@@ -49,7 +31,7 @@ fn main() -> Result<(), Box<dyn Error>> {
   let overhaul = config.load(file)?;
 
   get_all_sections(overhaul);
-  update_configuration_raw(file, "");
+  dec::update_configuration_raw(file, "");
 
   dec::main_menu();
   
