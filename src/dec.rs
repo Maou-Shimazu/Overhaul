@@ -121,7 +121,8 @@ pub fn main_menu() {
     println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
     println!("[2] Update File.");
-    println!("[3] Show all stored files.");
+    println!("[3] Edit Configuration Values.");
+    println!("[4] Show all stored files.");
     print!("What would you like to do?: ");
     stdout().flush().ok();
     read_input_main();
