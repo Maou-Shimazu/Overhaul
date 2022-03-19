@@ -41,11 +41,11 @@ pub fn add_new() -> Result<(), std::io::Error> {
     let _fileurl: String = read!();
 
     let filename: String = format!("\n[{}]", _filename);
-    let filelog: String = format!("\n[{}]", _filename);
+    //let filelog: String = format!("\n[{}]", _filename);
     let fileloc: String = format!("\nloc = {}", _fileloc);
     let fileurl: String = format!("\nurl = {}", _fileurl);
     update_configuration_string(PATH, filename);
-    update_configuration_string(LOG, filelog);
+    //update_configuration_string(LOG, filelog);
     update_configuration_string(PATH, fileloc);
     update_configuration_string(PATH, fileurl);
     Ok(())
@@ -120,7 +120,7 @@ pub fn main_menu() {
     println!("----------------------");
     println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
-    println!("[2] Update Options.");
+    println!("[2] Update File.");
     println!("[3] Show all stored files.");
     print!("What would you like to do?: ");
     stdout().flush().ok();
