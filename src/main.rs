@@ -37,7 +37,20 @@ async fn main() -> Result<(), Box<dyn Error>> {
         dec::main_menu();
       }
       2 => {
-          
+        if let Ok(lines) = dec::read_lines(dec::LOG) {
+          for line in lines {
+              if let Ok(ip) = line {
+                  //println!("{}", ip);
+                  let section = ip;
+                  let _overhaul = config.load(dec::PATH)?;
+                  let url = config.get(section.as_str().trim(), "url").unwrap();
+                  let request = reqwest::get(url).await?.text().await?;
+                  let request = dec::store_request(request);
+                  let loc = config.get(section.as_str().trim(), "loc").unwrap();
+                  dec::write_to_file(loc.as_str(), request);
+              }
+          }
+        }
       },
       _ => println!("Failed to complete configuration."),
     }

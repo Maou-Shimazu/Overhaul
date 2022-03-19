@@ -2,10 +2,14 @@ use configparser::ini::Ini;
 use std::fs::OpenOptions;
 use std::io::{stdout, Write};
 use text_io::read;
+use std::fs::File;
+use std::io::{self, BufRead};
+use std::path::Path;
 // use colored::*; //to add colors
 
 // static path: &str = "{path_goes_here}/config/overhaul.ini";
 pub static PATH: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/overhaul.ini";
+pub static LOG: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/log.ini";
 
 /// Get specific key from overhaul.ini. takes a String which is assigned config.get() and returns the key for usage;
 pub fn get_specific_key(key: String) -> String {
@@ -14,7 +18,6 @@ pub fn get_specific_key(key: String) -> String {
 /// Updates file configuration with the data variable being a string.
 pub fn update_configuration_string(file: &str, data: String) {
     let mut write = OpenOptions::new()
-        .create_new(true)
         .append(true)
         .open(file)
         .expect("Unable to open file");
@@ -38,9 +41,11 @@ pub fn add_new() -> Result<(), std::io::Error> {
     let _fileurl: String = read!();
 
     let filename: String = format!("\n[{}]", _filename);
+    let filelog: String = format!("\n[{}]", _filename);
     let fileloc: String = format!("\nloc = {}", _fileloc);
     let fileurl: String = format!("\nurl = {}", _fileurl);
     update_configuration_string(PATH, filename);
+    update_configuration_string(LOG, filelog);
     update_configuration_string(PATH, fileloc);
     update_configuration_string(PATH, fileurl);
     Ok(())
@@ -60,7 +65,7 @@ pub fn store_request(request: String) -> String {
 pub fn get_location(section: &str) -> String {
     return Ini::new().get(section.trim(), "loc").unwrap();
 }
-
+/// Takes filename as str and data to be writen to the file as String, to be used with store_request() 
 pub fn write_to_file(file: &str, data: String) {
     let mut write = OpenOptions::new()
         .write(true)
@@ -122,4 +127,8 @@ pub fn main_menu() {
     read_input_main();
 }
 
-pub fn update_all() {}
+pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where P: AsRef<Path>, {
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
