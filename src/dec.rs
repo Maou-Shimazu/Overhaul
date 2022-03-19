@@ -14,6 +14,7 @@ pub fn get_specific_key(key: String) -> String {
 /// Updates file configuration with the data variable being a string.
 pub fn update_configuration_string(file: &str, data: String) {
     let mut write = OpenOptions::new()
+        .create_new(true)
         .append(true)
         .open(file)
         .expect("Unable to open file");
@@ -36,7 +37,7 @@ pub fn add_new() -> Result<(), std::io::Error> {
     stdout().flush().ok();
     let _fileurl: String = read!();
 
-    let filename: String = format!("\n[{}]\n", _filename);
+    let filename: String = format!("\n[{}]", _filename);
     let fileloc: String = format!("\nloc = {}", _fileloc);
     let fileurl: String = format!("\nurl = {}", _fileurl);
     update_configuration_string(PATH, filename);
@@ -47,8 +48,7 @@ pub fn add_new() -> Result<(), std::io::Error> {
 
 /// Read config/overhaul.ini to stdout
 pub fn get_config() {
-    let contents = std::fs::read_to_string(PATH)
-        .expect("Something went wrong reading the file");
+    let contents = std::fs::read_to_string(PATH).expect("Something went wrong reading the file");
     println!("\n{}", contents);
 }
 /// stores request from get_request
@@ -67,7 +67,6 @@ pub fn write_to_file(file: &str, data: String) {
         .truncate(true)
         .open(file)
         .expect("Unable to open file");
-        
     write
         .write_all(data.as_bytes())
         .expect("Unable to write data");
@@ -123,6 +122,4 @@ pub fn main_menu() {
     read_input_main();
 }
 
-pub fn update_all(){
-
-}
+pub fn update_all() {}
