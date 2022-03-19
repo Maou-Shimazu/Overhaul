@@ -1,20 +1,26 @@
-use text_io::read;
-use std::io::{self, Write};
+use configparser::ini::Ini;
 use std::fs::OpenOptions;
-use std::io::stdout;
+use std::io::{stdout, Write};
+use text_io::read;
 // use colored::*; //to add colors
-  
+
+/// Get specific key from overhaul.ini. takes a String which is assigned config.get() and returns the key for usage;
+pub fn get_specific_key(key: String) -> String {
+    key
+}
 /// Updates file configuration with the data variable being a string.
 pub fn update_configuration_string(file: &str, data: String) {
     let mut write = OpenOptions::new()
-          .append(true)
-          .open(file)
-          .expect("Unable to open file");
-     write.write_all(data.as_bytes()).expect("Unable to write data");
+        .append(true)
+        .open(file)
+        .expect("Unable to open file");
+    write
+        .write_all(data.as_bytes())
+        .expect("Unable to write data");
 }
 
-
-fn add_new() -> Result<(), std::io::Error> {
+/// Add new configuration file to overhaul.ini
+pub fn add_new() -> Result<(), std::io::Error> {
     let file: &str = "config/overhaul.ini";
     print!("\nFilename: ");
     stdout().flush().ok();
@@ -37,29 +43,71 @@ fn add_new() -> Result<(), std::io::Error> {
     Ok(())
 }
 
+/// Read config/overhaul.ini to stdout
+pub fn get_config() {
+    let contents = std::fs::read_to_string("config/overhaul.ini")
+        .expect("Something went wrong reading the file");
+    println!("\n{}", contents);
+}
+/// stores request from get_request
+pub fn store_request(request: String) -> String {
+    request
+}
+
+/// Returns Location from provided section.
+pub fn get_location(section: &str) -> String {
+    return Ini::new().get(section.trim(), "loc").unwrap();
+}
+
+pub fn write_to_file(){
+    
+}
+
 /// Read input for main menu.
-pub fn read_input_main(){
+pub fn read_input_main() {
     let ans = read!();
     match ans {
         1 => {
+            // Adding new file
             match add_new() {
                 Ok(_) => println!("Configuration Added."),
-                _ => println!("Failed to add new file to configuration.")}
-            main_menu();},
-        5 => std::process::exit(0),
-        _=> {println!("option {} is not available, please try another option.", ans); main_menu();},
+                _ => println!("Failed to add new file to configuration."),
+            }
+            main_menu();
+        }
+
+        2 => (),
+
+        4 => {
+            // Getting all information from overhaul.ini
+            get_config();
+            main_menu();
+        }
+
+        0 => {
+            // Exit process
+            println!("Thank you for using Overhaul.");
+            std::process::exit(0)
+        }
+        _ => {
+            println!(
+                "option {} is not available, please try another option.",
+                ans
+            );
+            main_menu();
+        }
     }
 }
 
-/// The main menu 
-pub fn main_menu(){
+/// The main menu
+pub fn main_menu() {
     println!("\nWelcome to OverHaul.");
     println!("----------------------");
+    println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
     println!("[2] Update File.");
-    println!("[3] Update all files.");
-    println!("[4] -------------------");
-    print!("[5] Exit.\nWhat would you like to do?: ");
+    println!("[4] Show all stored files.");
+    print!("What would you like to do?: ");
     stdout().flush().ok();
     read_input_main();
 }

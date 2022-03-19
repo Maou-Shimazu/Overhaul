@@ -1,50 +1,37 @@
 use configparser::ini::Ini;
 use std::error::Error;
+use std::io::{stdout, Write};
 use text_io::read;
-use reqwest;
-
 pub mod dec;
-
-#[allow(dead_code)]
-/// Requests content from a URL.
-fn get_request(){}
-
-
-fn get_all_sections(file: std::collections::HashMap<std::string::String, std::collections::HashMap<std::string::String, std::option::Option<std::string::String>>>){
-  println!("\n{:?}\n", file);
-}
-
-fn get_specific_section(section_name: String){
-  println!("{}", section_name)
-}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-
-  // Creating a new configuration for configparser
   let mut config = Ini::new();
-  // File location
   let file: &str = "config/overhaul.ini";
+  let _overhaul = config.load(file)?;
 
-  // Load file for cp
-  let overhaul = config.load(file)?;
+  dec::main_menu();
 
-  get_all_sections(overhaul);
+  println!("\nPlease make sure the name of file is the same as when you registered it, if you dont remember then select 4 from main menu.");
+  print!("\nName of file you want to update: ");
+  stdout().flush().ok();
+  let section: String = read!();
+  let mut config = Ini::new();
+  println!("Please wait as we update your file...");
 
-  //dec::main_menu();
-  
-  // let newstr: String = read!();
-  // let url = config.get(newstr.as_str().trim(), "url").unwrap();
-  // let loc = config.get("parse_args", "loc").unwrap();
+  let _overhaul = config.load("config/overhaul.ini")?;
+  let url = config.get(section.as_str().trim(), "url").unwrap();
+  let request = reqwest::get(url).await?.text().await?;
+  //println!("body = {:?}", body);
+  let request = dec::store_request(request);
 
-  // get_specific_section(url);
+  //  let newstr: String = read!();
+  //  let _url = config.get(newstr.as_str().trim(), "url").unwrap();
+  let loc = config.get("parse_args", "loc").unwrap();
+  dec::update_configuration_string(loc.as_str(), request);
 
-  let body = reqwest::get("https://github.com/Maou-Shimazu/Parse-Args/blob/main/include/parse_args.h")
-    .await?
-    .text()
-    .await?;
 
-println!("body = {:?}", body);
-
-    Ok(())
+  println!("File Updated!");
+  dec::main_menu();
+  Ok(())
 }
