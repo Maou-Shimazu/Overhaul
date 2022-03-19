@@ -4,6 +4,9 @@ use std::io::{stdout, Write};
 use text_io::read;
 // use colored::*; //to add colors
 
+// static path: &str = "{path_goes_here}/config/overhaul.ini";
+pub static PATH: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/overhaul.ini";
+
 /// Get specific key from overhaul.ini. takes a String which is assigned config.get() and returns the key for usage;
 pub fn get_specific_key(key: String) -> String {
     key
@@ -21,7 +24,6 @@ pub fn update_configuration_string(file: &str, data: String) {
 
 /// Add new configuration file to overhaul.ini
 pub fn add_new() -> Result<(), std::io::Error> {
-    let file: &str = "config/overhaul.ini";
     print!("\nFilename: ");
     stdout().flush().ok();
     let _filename: String = read!();
@@ -34,18 +36,18 @@ pub fn add_new() -> Result<(), std::io::Error> {
     stdout().flush().ok();
     let _fileurl: String = read!();
 
-    let filename: String = format!("\n\n[{}]", _filename);
+    let filename: String = format!("\n[{}]\n", _filename);
     let fileloc: String = format!("\nloc = {}", _fileloc);
     let fileurl: String = format!("\nurl = {}", _fileurl);
-    update_configuration_string(file, filename);
-    update_configuration_string(file, fileloc);
-    update_configuration_string(file, fileurl);
+    update_configuration_string(PATH, filename);
+    update_configuration_string(PATH, fileloc);
+    update_configuration_string(PATH, fileurl);
     Ok(())
 }
 
 /// Read config/overhaul.ini to stdout
 pub fn get_config() {
-    let contents = std::fs::read_to_string("config/overhaul.ini")
+    let contents = std::fs::read_to_string(PATH)
         .expect("Something went wrong reading the file");
     println!("\n{}", contents);
 }
@@ -86,7 +88,7 @@ pub fn read_input_main() {
 
         2 => (),
 
-        4 => {
+        3 => {
             // Getting all information from overhaul.ini
             get_config();
             main_menu();
@@ -114,9 +116,13 @@ pub fn main_menu() {
     println!("----------------------");
     println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
-    println!("[2] Update File.");
-    println!("[4] Show all stored files.");
+    println!("[2] Update Options.");
+    println!("[3] Show all stored files.");
     print!("What would you like to do?: ");
     stdout().flush().ok();
     read_input_main();
+}
+
+pub fn update_all(){
+
 }

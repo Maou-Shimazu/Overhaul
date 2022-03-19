@@ -9,6 +9,7 @@ edition = "2021"
 configparser = "3.0.0"
 text_io = "0.1.10"
 colored = "2"
+configr = "0.8.0"
 reqwest = { version = "0.11", features = ["json"] }
 futures = "0.3"
 tokio = { version = "1.12.0", features = ["full"] }
