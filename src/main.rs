@@ -1,7 +1,5 @@
 use configparser::ini::Ini;
 use std::error::Error;
-use std::io::Write;
-use std::fs::OpenOptions;
 use text_io::read;
 
 pub mod dec;

@@ -45,14 +45,14 @@ fn add_new() -> Result<(), std::io::Error> {
     Ok(())
 }
 
-pub fn read(){
+/// Read input for main menu.
+pub fn read_input_main(){
     let ans = read!();
     match ans {
         1 => {
             match add_new() {
                 Ok(_) => println!("Configuration Added."),
-            _ => println!("Failed to add new file to configuration.")
-            }
+                _ => println!("Failed to add new file to configuration.")}
             main_menu();},
         5 => std::process::exit(0),
         _=> {println!("option {} is not available, please try another option.", ans); main_menu();},
@@ -69,5 +69,5 @@ pub fn main_menu(){
     println!("[4] -------------------");
     print!("[5] Exit.\nWhat would you like to do?: ");
     let _ = io::stdout().flush();
-    read();
+    read_input_main();
 }
