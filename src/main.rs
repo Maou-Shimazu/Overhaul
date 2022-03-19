@@ -1,6 +1,7 @@
 use configparser::ini::Ini;
 use std::error::Error;
 use text_io::read;
+use reqwest;
 
 pub mod dec;
 
@@ -17,8 +18,8 @@ fn get_specific_section(section_name: String){
   println!("{}", section_name)
 }
 
-#[allow(unused_variables)]
-fn main() -> Result<(), Box<dyn Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
 
   // Creating a new configuration for configparser
   let mut config = Ini::new();
@@ -29,15 +30,21 @@ fn main() -> Result<(), Box<dyn Error>> {
   let overhaul = config.load(file)?;
 
   get_all_sections(overhaul);
-  dec::update_configuration_raw(file, "");
 
-  dec::main_menu();
+  //dec::main_menu();
   
-  let newstr: String = read!();
-  let url = config.get(newstr.as_str().trim(), "url").unwrap();
-  let loc = config.get("parse_args", "loc").unwrap();
+  // let newstr: String = read!();
+  // let url = config.get(newstr.as_str().trim(), "url").unwrap();
+  // let loc = config.get("parse_args", "loc").unwrap();
 
-  get_specific_section(url);
+  // get_specific_section(url);
+
+  let body = reqwest::get("https://github.com/Maou-Shimazu/Parse-Args/blob/main/include/parse_args.h")
+    .await?
+    .text()
+    .await?;
+
+println!("body = {:?}", body);
 
     Ok(())
 }

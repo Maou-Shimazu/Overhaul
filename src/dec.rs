@@ -3,14 +3,6 @@ use std::io::{self, Write};
 use std::fs::OpenOptions;
 use std::io::stdout;
 // use colored::*; //to add colors
-
-pub fn update_configuration_raw(file: &str, data: &str){
-    let mut write = OpenOptions::new()
-          .append(true)
-          .open(file)
-          .expect("Unable to open file");
-     write.write_all(data.as_bytes()).expect("Unable to write data");
-  }
   
 /// Updates file configuration with the data variable being a string.
 pub fn update_configuration_string(file: &str, data: String) {
@@ -68,6 +60,6 @@ pub fn main_menu(){
     println!("[3] Update all files.");
     println!("[4] -------------------");
     print!("[5] Exit.\nWhat would you like to do?: ");
-    let _ = io::stdout().flush();
+    stdout().flush().ok();
     read_input_main();
 }
