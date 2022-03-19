@@ -28,10 +28,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
   //  let newstr: String = read!();
   //  let _url = config.get(newstr.as_str().trim(), "url").unwrap();
   let loc = config.get("parse_args", "loc").unwrap();
-  dec::update_configuration_string(loc.as_str(), request);
+  dec::write_to_file(loc.as_str(), request);
 
 
   println!("File Updated!");
-  dec::main_menu();
   Ok(())
 }

@@ -59,8 +59,16 @@ pub fn get_location(section: &str) -> String {
     return Ini::new().get(section.trim(), "loc").unwrap();
 }
 
-pub fn write_to_file(){
-    
+pub fn write_to_file(file: &str, data: String) {
+    let mut write = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(file)
+        .expect("Unable to open file");
+        
+    write
+        .write_all(data.as_bytes())
+        .expect("Unable to write data");
 }
 
 /// Read input for main menu.
@@ -89,6 +97,7 @@ pub fn read_input_main() {
             println!("Thank you for using Overhaul.");
             std::process::exit(0)
         }
+
         _ => {
             println!(
                 "option {} is not available, please try another option.",
