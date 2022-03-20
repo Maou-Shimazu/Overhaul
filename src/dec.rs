@@ -96,43 +96,10 @@ pub fn update_file() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn edit_configuration() -> Result<(), Box<dyn Error>> {
-    let mut config = Ini::new();
-    let _overhaul = config.load(PATH)?;
-    print!("\nName of file you want to configure: ");
-    stdout().flush().ok();
-    let section: String = read!();
-    print!("Section you want to configure:\n[1] Url \n[2] Location \n[3] Both: ");
-    stdout().flush().ok();
-    let configuration: i32 = read!();
-    match configuration {
-        1 => {
-            let url = config.get(section.as_str().trim(), "url").unwrap();
-            println!("url: {}", url);
-            print!("New url: ");
-            stdout().flush().ok();
-            let new_url: String = read!(); 
-            let _url = config.set(section.as_str().trim(), "url", Some(new_url));
-            // parse_and_rewrite(section, line, data) logic.
-            // parse_and_rewrite(section.as_str(), 2, _url)
-        }
-        2 => {
-            let loc = config.get(section.as_str().trim(), "loc").unwrap();
-            println!("Location: {}", loc)
-        }
-        3 => {
-            let url = config.get(section.as_str().trim(), "url").unwrap();
-            let loc = config.get(section.as_str().trim(), "loc").unwrap();
-            println!("Url: {}\nLocation: {}", url, loc);
-        }
-        _ => println!("Failed to update configuration for your file."),
-    }
-    Ok(())
-}
 
 /// Read input for main menu.
 pub fn read_input_main() {
-    let ans = read!();
+    let ans: i8 = read!();
     match ans {
         1 => {
             // Adding new file
@@ -160,14 +127,6 @@ pub fn read_input_main() {
         }
 
         5 => {
-            match edit_configuration() {
-                Ok(_) => println!("File Configured."),
-                _ => println!("Failed to edit configuration for your file."),
-            }
-            main_menu();
-        }
-
-        0 => {
             // Exit process
             println!("Thank you for using Overhaul.");
             std::process::exit(0)
@@ -187,12 +146,11 @@ pub fn read_input_main() {
 pub fn main_menu() {
     println!("\nWelcome to OverHaul.");
     println!("----------------------");
-    println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
     println!("[2] Update File.");
     println!("[3] Update All");
     println!("[4] Show all stored files.");
-    println!("[5] Edit config values.");
+    println!("[5] Exit Overhaul");
     print!("What would you like to do?: ");
     stdout().flush().ok();
     read_input_main();
