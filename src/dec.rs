@@ -5,6 +5,7 @@ use text_io::read;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
+use std::error::Error;
 // use colored::*; //to add colors
 
 // static path: &str = "{path_goes_here}/config/overhaul.ini";
@@ -77,6 +78,31 @@ pub fn write_to_file(file: &str, data: String) {
         .expect("Unable to write data");
 }
 
+pub fn update_file() -> Result<(), Box<dyn Error>> {
+    let mut config = Ini::new();
+    let _overhaul = config.load(PATH)?;
+    println!("\nPlease make sure the name of file is the same as when you registered it, if you dont remember then select 4 from main menu.");
+    print!("\nName of file you want to update: ");
+    stdout().flush().ok();
+    let section: String = read!();
+    let mut config = Ini::new();
+    println!("Please wait as we update your file...");
+
+    let _overhaul = config.load(PATH)?;
+    let url = config.get(section.as_str().trim(), "url").unwrap();
+    let request = reqwest::blocking::get(url)?.text()?;
+    //let request = reqwest::get(url).await?.text().await?;
+    let request = store_request(request);
+    let loc = config.get(section.as_str().trim(), "loc").unwrap();
+    write_to_file(loc.as_str(), request);
+    Ok(())
+}
+
+pub fn update_all(){
+    
+}
+
+
 /// Read input for main menu.
 pub fn read_input_main() {
     let ans = read!();
@@ -90,9 +116,17 @@ pub fn read_input_main() {
             main_menu();
         }
 
-        2 => (),
+        2 => {
+            match update_file() {
+                Ok(_) => println!("File Updated."),
+                _ => println!("Failed to Update File."),
+            }
+            main_menu();
+        },
 
-        3 => {
+        3 => (),
+
+        4 => {
             // Getting all information from overhaul.ini
             get_config();
             main_menu();
@@ -121,7 +155,7 @@ pub fn main_menu() {
     println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
     println!("[2] Update File.");
-    println!("[3] Edit Configuration Values.");
+    println!("[3] Update All");
     println!("[4] Show all stored files.");
     print!("What would you like to do?: ");
     stdout().flush().ok();
