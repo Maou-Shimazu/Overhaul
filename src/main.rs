@@ -4,8 +4,7 @@ pub mod dec;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-  #[allow(while_true)]
-  while true {
+  while 1==1 {
     dec::main_menu();
     let _loc = String::from_utf8(fs::read(dec::LOC)?).unwrap(); 
     let _url = String::from_utf8(fs::read(dec::URL)?).unwrap();
