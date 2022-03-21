@@ -1,6 +1,6 @@
 # Overhaul 
 
-## Overhaul is a comand line content request program that fetches information from user specified url's and writes that information to user specified files. 
+#### Overhaul is a comand line content request program that fetches information from user specified url's and writes that information to user specified files. 
 
 ## Installation and usage
 #### Install overhaul.exe at the [releases page](https://github.com/Maou-Shimazu/Overhaul/releases/tag/v1.0) or click [here](https://github.com/Maou-Shimazu/Overhaul/releases/download/v1.0/overhaul.exe) for a direct download.
