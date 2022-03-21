@@ -6,13 +6,17 @@ use std::io::{self, BufRead};
 use std::io::{stdout, Write};
 use std::path::Path;
 use text_io::read;
-
 // use colored::*; //to add colors
 
+pub fn configdir() -> std::path::PathBuf {
+    dirs::document_dir().unwrap()
+}
+
 // static path: &str = "{path_goes_here}/config/overhaul.ini";
-pub static PATH: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/overhaul.ini";
-pub static URL: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/url.ini";
-pub static LOC: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/loc.ini";
+// pub static PATH: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/overhaul.ini";
+// pub static URL: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/url.ini";
+// pub static LOC: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/loc.ini";
+
 /// Get specific key from overhaul.ini. takes a String which is assigned config.get() and returns the key for usage;
 pub fn get_specific_key(key: String) -> String {
     key
@@ -30,32 +34,44 @@ pub fn update_configuration_string(file: &str, data: String) {
 
 /// Add new configuration file to overhaul.ini
 pub fn add_new() -> Result<(), std::io::Error> {
+    let path: String = format!("{}\\Overhaul\\config\\overhaul.ini", configdir().to_str().unwrap());
+    let url: String = format!("{}\\Overhaul\\config\\url.ini", configdir().to_str().unwrap());
+    let loc: String = format!("{}\\Overhaul\\config\\loc.ini", configdir().to_str().unwrap());
+
     print!("\nFilename: ");
     stdout().flush().ok();
     let _filename: String = read!();
 
-    print!("File Location: ");
-    stdout().flush().ok();
-    let _fileloc: String = read!();
-
     print!("File Url: ");
     stdout().flush().ok();
     let _fileurl: String = read!();
+    
+    print!("File Location: ");
+    stdout().flush().ok();
+    let _fileloc: String = read!();
+    
 
-    let filename: String = format!("\n[{}]", _filename);
-    //let filelog: String = format!("\n[{}]", _filename);
-    let fileloc: String = format!("\nloc = {}", _fileloc);
-    let fileurl: String = format!("\nurl = {}", _fileurl);
-    update_configuration_string(PATH, filename);
-    //update_configuration_string(LOG, filelog);
-    update_configuration_string(PATH, fileurl);
-    update_configuration_string(PATH, fileloc);
+    let filename: String = format!("[{}]\n", _filename);
+    let fileloc: String = format!("loc = {}\n", _fileloc);
+    let fileurl: String = format!("url = {}\n", _fileurl);
+
+    let _fileurl = format!("{}\n", _fileurl);
+    let _fileloc = format!("{}\n", _fileloc);
+
+    update_configuration_string(path.as_str(), filename); 
+    update_configuration_string(path.as_str(), fileurl); 
+    update_configuration_string(path.as_str(), fileloc);
+
+    update_configuration_string(url.as_str(), _fileurl);
+    update_configuration_string(loc.as_str(), _fileloc);
+
     Ok(())
 }
 
 /// Read config/overhaul.ini to stdout
 pub fn get_config() {
-    let contents = std::fs::read_to_string(PATH).expect("Something went wrong reading the file");
+    let path: String = format!("{}/Overhaul/config/overhaul.ini", configdir().to_str().unwrap());
+    let contents = std::fs::read_to_string(path).expect("Something went wrong reading the file");
     println!("\n{}", contents);
 }
 /// stores get_request
@@ -80,19 +96,7 @@ pub fn write_to_file(file: &str, data: String) {
 }
 
 pub fn update_file() -> Result<(), Box<dyn Error>> {
-    println!("\nPlease make sure the name of file is the same as when you registered it, if you dont remember then select 4 from main menu.");
-    print!("\nName of file you want to update: ");
-    stdout().flush().ok();
-    let section: String = read!();
-    let mut config = Ini::new();
-    println!("Please wait as we update your file...");
-
-    let _overhaul = config.load(PATH)?;
-    let url = config.get(section.as_str().trim(), "url").unwrap();
-    let request = reqwest::blocking::get(url)?.text()?;
-    let request = store_request(request);
-    let loc = config.get(section.as_str().trim(), "loc").unwrap();
-    write_to_file(loc.as_str(), request);
+    
     Ok(())
 }
 
@@ -110,23 +114,15 @@ pub fn read_input_main() {
             main_menu();
         }
 
-        2 => {
-            match update_file() {
-                Ok(_) => println!("File Updated."),
-                _ => println!("Failed to Update File."),
-            }
-            main_menu();
-        }
+        2 => (), //move to main
 
-        3 => (),
-
-        4 => {
+        3 => {
             // Getting all information from overhaul.ini
             get_config();
             main_menu();
         }
 
-        5 => {
+        0 => {
             // Exit process
             println!("Thank you for using Overhaul.");
             std::process::exit(0)
@@ -146,11 +142,10 @@ pub fn read_input_main() {
 pub fn main_menu() {
     println!("\nWelcome to OverHaul.");
     println!("----------------------");
+    println!("[0] Exit Overhaul");
     println!("[1] Add New File.");
-    println!("[2] Update File.");
-    println!("[3] Update All");
-    println!("[4] Show all stored files.");
-    println!("[5] Exit Overhaul");
+    println!("[2] Update Options.");
+    println!("[3] Show all stored files.");
     print!("What would you like to do?: ");
     stdout().flush().ok();
     read_input_main();
