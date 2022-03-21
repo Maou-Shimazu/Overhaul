@@ -9,7 +9,7 @@ use text_io::read;
 // use colored::*; //to add colors
 
 pub fn configdir() -> std::path::PathBuf {
-    dirs::document_dir().unwrap()
+    dirs::home_dir().unwrap()
 }
 
 // static path: &str = "{path_goes_here}/config/overhaul.ini";
@@ -34,9 +34,9 @@ pub fn update_configuration_string(file: &str, data: String) {
 
 /// Add new configuration file to overhaul.ini
 pub fn add_new() -> Result<(), std::io::Error> {
-    let path: String = format!("{}\\Overhaul\\config\\overhaul.ini", configdir().to_str().unwrap());
-    let url: String = format!("{}\\Overhaul\\config\\url.ini", configdir().to_str().unwrap());
-    let loc: String = format!("{}\\Overhaul\\config\\loc.ini", configdir().to_str().unwrap());
+    let path: String = format!("{}\\.overhaul\\config\\overhaul.ini", configdir().to_str().unwrap());
+    let url: String = format!("{}\\.overhaul\\config\\url.ini", configdir().to_str().unwrap());
+    let loc: String = format!("{}\\.overhaul\\config\\loc.ini", configdir().to_str().unwrap());
 
     print!("\nFilename: ");
     stdout().flush().ok();
@@ -70,7 +70,7 @@ pub fn add_new() -> Result<(), std::io::Error> {
 
 /// Read config/overhaul.ini to stdout
 pub fn get_config() {
-    let path: String = format!("{}/Overhaul/config/overhaul.ini", configdir().to_str().unwrap());
+    let path: String = format!("{}/.overhaul/config/overhaul.ini", configdir().to_str().unwrap());
     let contents = std::fs::read_to_string(path).expect("Something went wrong reading the file");
     println!("\n{}", contents);
 }

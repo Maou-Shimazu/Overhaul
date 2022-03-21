@@ -1,11 +1,28 @@
 use configparser::ini::Ini;
+use std::io::{stdout, Write};
 use std::error::Error;
 use text_io::read;
-use std::io::{stdout, Write};
+use std::env;
 pub mod dec;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    
+    let args: Vec<String> = env::args().collect();
+    match args.len() {
+        1 => (),
+        2 => {
+            match args[1].as_str() {
+                "--config" => {
+                    println!("config");
+                    
+                },
+                _ => println!("Please type overhaul --config"),
+            }
+        }
+        _ => println!("Invalid argument, type overhaul --config then overhaul to get started.")
+    }
+
     while 1 == 1 {
         dec::main_menu();
 
@@ -27,7 +44,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 let section: String = read!();
                 let mut config = Ini::new();
                 //println!("Please wait as we update your file...");
-                let path: String = format!("{}\\Overhaul\\config\\overhaul.ini", dec::configdir().to_str().unwrap());
+                let path: String = format!("{}\\.overhaul\\config\\overhaul.ini", dec::configdir().to_str().unwrap());
                 let _overhaul = config.load(path)?;
                 let url = config.get(section.as_str().trim(), "url").unwrap();
                 println!("Fetching {}", url.clone());
@@ -39,8 +56,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 dec::write_to_file(loc.as_str(), request);
             },
             2 => {
-                let _url: String = format!("{}/Overhaul/config/url.ini", dec::configdir().to_str().unwrap());
-                let _loc: String = format!("{}/Overhaul/config/loc.ini", dec::configdir().to_str().unwrap());
+                let _url: String = format!("{}/.overhaul/config/url.ini", dec::configdir().to_str().unwrap());
+                let _loc: String = format!("{}/.overhaul/config/loc.ini", dec::configdir().to_str().unwrap());
 
                 let loc: String = String::from_utf8(std::fs::read(_loc)?).unwrap();
                 let url: String = String::from_utf8(std::fs::read(_url)?).unwrap();
