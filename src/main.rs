@@ -7,7 +7,6 @@ pub mod dec;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    
     let args: Vec<String> = env::args().collect();
     match args.len() {
         1 => (),
@@ -15,7 +14,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             match args[1].as_str() {
                 "--config" => {
                     println!("config");
-                    
+                    std::process::exit(0);
                 },
                 _ => println!("Please type overhaul --config"),
             }
@@ -23,7 +22,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         _ => println!("Invalid argument, type overhaul --config then overhaul to get started.")
     }
 
-    while 1 == 1 {
+    while 1==1 {
         dec::main_menu();
 
         println!("\nUpdate Options.");

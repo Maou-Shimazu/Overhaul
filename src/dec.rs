@@ -12,11 +12,6 @@ pub fn configdir() -> std::path::PathBuf {
     dirs::home_dir().unwrap()
 }
 
-// static path: &str = "{path_goes_here}/config/overhaul.ini";
-// pub static PATH: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/overhaul.ini";
-// pub static URL: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/url.ini";
-// pub static LOC: &str = "C:/Users/User5/Documents/Github Projects/Overhaul/config/loc.ini";
-
 /// Get specific key from overhaul.ini. takes a String which is assigned config.get() and returns the key for usage;
 pub fn get_specific_key(key: String) -> String {
     key
