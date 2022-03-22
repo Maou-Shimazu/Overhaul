@@ -1,9 +1,10 @@
 use configparser::ini::Ini;
 use std::env;
 use std::error::Error;
-use std::io::{stdout, Write};
-use text_io::read;
 use std::fs;
+use std::io::{stdout, Write};
+use std::path::PathBuf;
+use text_io::read;
 pub mod dec;
 
 #[tokio::main]
@@ -13,21 +14,23 @@ async fn main() -> Result<(), Box<dyn Error>> {
         1 => (),
         2 => match args[1].as_str() {
             "-config" => {
-                let base: String = format!("{}\\.overhaul\\config", dec::configdir().to_str().unwrap());
-                if !std::path::Path::new(base.as_str()).is_dir(){
-                    let url: String = format!("{}\\url.ini", base);
-                    let loc: String = format!("{}\\loc.ini", base);
-                    let overhaul: String = format!("{}\\overhaul.ini", base);
+                let base: String = dec::configdir();
+                if !PathBuf::from(base.as_str()).is_dir() {
+                    let url: String = dec::urlfile();
+                    let loc: String = dec::locfile();
+                    let overhaul: String = dec::configfile();
                     fs::create_dir_all(base)?;
                     fs::File::create(url)?;
                     fs::File::create(loc)?;
                     fs::File::create(overhaul)?;
                     println!("All configs created, type `overhaul` to get started.");
-                }
-                else {
+                } else {
                     println!("Directory already exists.");
                 }
-               
+                std::process::exit(0);
+            }
+            "-configdir" => {
+                println!("{}", dec::configdir());
                 std::process::exit(0);
             }
             _ => {
@@ -59,10 +62,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 let section: String = read!();
                 let mut config = Ini::new();
                 //println!("Please wait as we update your file...");
-                let path: String = format!(
-                    "{}\\.overhaul\\config\\overhaul.ini",
-                    dec::configdir().to_str().unwrap()
-                );
+                let path: String = dec::configfile();
                 let _overhaul = config.load(path)?;
                 let url = config.get(section.as_str().trim(), "url").unwrap();
                 println!("Fetching {}", url.clone());
@@ -71,17 +71,18 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 let request = dec::store_request(request);
                 let loc = config.get(section.as_str().trim(), "loc").unwrap();
                 println!("Updating {}", loc.clone());
-                dec::write_to_file(loc.as_str(), request);
+                if PathBuf::from(loc.clone()).is_dir() {
+                    dec::write_to_file(
+                        &format!("{}{}", loc.as_str(), section.as_str().trim()),
+                        request,
+                    );
+                } else {
+                    dec::write_to_file(loc.as_str(), request);
+                }
             }
             2 => {
-                let _url: String = format!(
-                    "{}/.overhaul/config/url.ini",
-                    dec::configdir().to_str().unwrap()
-                );
-                let _loc: String = format!(
-                    "{}/.overhaul/config/loc.ini",
-                    dec::configdir().to_str().unwrap()
-                );
+                let _url: String = dec::urlfile();
+                let _loc: String = dec::locfile();
 
                 let loc: String = String::from_utf8(std::fs::read(_loc)?).unwrap();
                 let url: String = String::from_utf8(std::fs::read(_url)?).unwrap();
