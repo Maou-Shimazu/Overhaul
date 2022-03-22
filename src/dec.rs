@@ -9,17 +9,30 @@ use std::path::{Path, PathBuf};
 use text_io::read;
 // use colored::*; //to add colors
 
-pub fn configfile() -> String {
-    let homedir = dirs::home_dir()
+pub fn configdir() -> String {
+    let configdir = dirs::config_dir()
         .unwrap()
         .into_os_string()
         .into_string()
         .unwrap()
         .replace('"', "");
     match OS {
-        "linux" => format!("{}/.overhaul/config/overhaul.ini", homedir),
-        "macos" => format!("{}/.overhaul/config/overhaul.ini", homedir),
-        "windows" => format!("{}\\.overhaul\\config\\overhaul.ini", homedir),
+        "linux" => format!("{}/overhaul/config", configdir),
+        "macos" => format!("{}/overhaul/config", configdir),
+        "windows" => format!("{}\\overhaul\\config", configdir),
+        _ => {
+            println!("OS not supported");
+            panic!("OS not supported");
+        }
+    }
+}
+
+pub fn configfile() -> String {
+    let configdir = configdir();
+    match OS {
+        "linux" => format!("{}/overhaul.ini", configdir),
+        "macos" => format!("{}/overhaul.ini", configdir),
+        "windows" => format!("{}\\overhaul.ini", configdir),
         _ => {
             println!("OS not supported");
             panic!("OS not supported");
@@ -28,16 +41,11 @@ pub fn configfile() -> String {
 }
 
 pub fn urlfile() -> String {
-    let homedir = dirs::home_dir()
-        .unwrap()
-        .into_os_string()
-        .into_string()
-        .unwrap()
-        .replace('"', "");
+    let configdir = configdir();
     match OS {
-        "linux" => format!("{}/.overhaul/config/url.ini", homedir),
-        "macos" => format!("{}/.overhaul/config/url.ini", homedir),
-        "windows" => format!("{}\\.overhaul\\config\\url.ini", homedir),
+        "linux" => format!("{}/url.ini", configdir),
+        "macos" => format!("{}/url.ini", configdir),
+        "windows" => format!("{}\\url.ini", configdir),
         _ => {
             println!("OS not supported");
             panic!("OS not supported");
@@ -46,34 +54,11 @@ pub fn urlfile() -> String {
 }
 
 pub fn locfile() -> String {
-    let homedir = dirs::home_dir()
-        .unwrap()
-        .into_os_string()
-        .into_string()
-        .unwrap()
-        .replace('"', "");
+    let configdir = configdir();
     match OS {
-        "linux" => format!("{}/.overhaul/config/loc.ini", homedir),
-        "macos" => format!("{}/.overhaul/config/loc.ini", homedir),
-        "windows" => format!("{}\\.overhaul\\config\\loc.ini", homedir),
-        _ => {
-            println!("OS not supported");
-            panic!("OS not supported");
-        }
-    }
-}
-
-pub fn configdir() -> String {
-    let homedir = dirs::home_dir()
-        .unwrap()
-        .into_os_string()
-        .into_string()
-        .unwrap()
-        .replace('"', "");
-    match OS {
-        "linux" => format!("{}/.overhaul/config", homedir),
-        "macos" => format!("{}/.overhaul/config", homedir),
-        "windows" => format!("{}\\.overhaul\\config", homedir),
+        "linux" => format!("{}/loc.ini", configdir),
+        "macos" => format!("{}/loc.ini", configdir),
+        "windows" => format!("{}\\loc.ini", configdir),
         _ => {
             println!("OS not supported");
             panic!("OS not supported");

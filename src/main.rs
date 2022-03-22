@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         2 => match args[1].as_str() {
             "-config" => {
                 let base: String = dec::configdir();
-                if !std::path::Path::new(base.as_str()).is_dir() {
+                if !PathBuf::from(base.as_str()).is_dir() {
                     let url: String = dec::urlfile();
                     let loc: String = dec::locfile();
                     let overhaul: String = dec::configfile();
@@ -27,6 +27,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 } else {
                     println!("Directory already exists.");
                 }
+                std::process::exit(0);
+            }
+            "-configdir" => {
+                println!("{}", dec::configdir());
                 std::process::exit(0);
             }
             _ => {
